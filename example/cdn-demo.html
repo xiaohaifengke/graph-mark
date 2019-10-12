@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>cdn example of use</title>
+    <script src="./fabric.js"></script>
+    <script src="../lib/graph-mark.js"></script>
+</head>
+<body>
+<img src="100x100x5.jpg" id="image1" style="display: none;">
+<img src="avatar.jpg" id="image2" style="display: none;">
+<div style="margin: 20px;">
+    <button onClick="newImgInit()">newImgInit</button>
+    <button onClick="clearRect()">Clear Rect</button>
+    <button onClick="drawRect()">Draw Rect</button>
+    <button onClick="showBoxInfo()">Show Box Info</button>
+</div>
+<canvas id="c" width="550" height="550"
+        style="margin-left: 20px; position: absolute; left: 20px; top: 20px; touch-action: none; user-select: none;border: 1px solid #333;"
+        class="lower-canvas"></canvas>
+<div id="box-info" style="margin: 20px;"></div>
+</body>
+</html>
+<script>
+  var imageId = 'image1';
+  var mark = new GraphMark.Mark({canvasTagId: 'c', maxResultsLength: 1});
+  var imgElement = document.getElementById(imageId);
+  mark.init(imgElement);
+
+  function newImgInit () {
+    imageId = imageId === 'image1' ? 'image2' : 'image1';
+    var imgElement = document.getElementById(imageId);
+    mark.init(imgElement);
+  }
+
+  function clearRect () {
+    mark.clearRect();
+  }
+
+  function drawRect () {
+    mark.cursorState.rect = !mark.cursorState.rect;
+    if (mark.cursorState.rect) {
+      mark.image.set('hoverCursor', 'crosshair');
+    } else {
+      mark.image.set('hoverCursor', 'move');
+    }
+  }
+
+  function showBoxInfo () {
+    var rect = mark && mark.results[0];
+    var container = document.getElementById('box-info');
+    container.innerHTML = JSON.stringify(rect);
+  }
+</script>

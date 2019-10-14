@@ -53,3 +53,36 @@ cdns
 ```
 You can test it on this [demo](https://github.com/xiaohaifengke/graph-mark/blob/dev/example/cdn-demo.html).
 
+## Babel7
+
+**Note:** This module is using the experimental [public class fields syntax](https://babeljs.io/docs/en/babel-plugin-proposal-class-properties), if you have error like that:
+ ```shell
+ ERROR  Failed to compile with 1 errors                                                                                                                                                                                                                  11:22:58
+
+
+     error  in ./node_modules/graph-mark/src/index.js
+
+    Module parse failed: Unexpected token (15:17)
+    You may need an appropriate loader to handle this file type.
+    |   }
+    |
+    >   defaultOptions = {
+    |     canvasTagId: null,
+    |     maxResultsLength: 1000000
+
+     @ ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./src/loaders/tunicorn-branch-loader.js??ref--15-0!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/views/monitor/
+    monitor.vue?vue&type=script&lang=js& 88:16-37
+
+    ...
+    ...
+ ```
+you should add *@babel/plugin-proposal-class-properties* in babel.config.js :
+```javascript
+const presets = []
+const plugins = [
+  '@babel/plugin-proposal-class-properties',
+  ...
+]
+
+module.exports = {presets, plugins}
+```

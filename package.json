@@ -1,7 +1,7 @@
 {
   "author": [
     {
-      "name": "Jhail",
+      "name": "jhail.xhfk",
       "email": "jiahailiu.xhfk@gmail.com",
       "url": ""
     }
@@ -24,8 +24,7 @@
     "rect"
   ],
   "license": "MIT",
-  "main": "dist/mark.js",
-  "module": "src/index.js",
+  "main": "lib/graph-mark.js",
   "name": "graph-mark",
   "repository": {
     "type": "git",
@@ -34,6 +33,5 @@
   "scripts": {
     "build": "webpack"
   },
-  "sideEffects": false,
   "version": "1.0.0"
 }

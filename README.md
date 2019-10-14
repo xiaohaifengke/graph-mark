@@ -12,7 +12,7 @@ npm install graph-mark -S
 
 ```javascript
 import { fabric } from 'fabric'
-import { mark } from 'graph-mark'
+import { Mark } from 'graph-mark'
 
 ```
 
@@ -51,5 +51,5 @@ cdns
   mark.init(imgElement);
 </script>
 ```
-You can test it on this [demo]().
+You can test it on this [demo](https://github.com/xiaohaifengke/graph-mark/blob/dev/example/cdn-demo.html).
 

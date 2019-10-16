@@ -1,9 +1,9 @@
 export class Mark {
   constructor (options) {
     if (typeof options === 'string') {
-      options = { canvasTagId: options }
+      options = {canvasTagId: options}
     }
-    let opts = { ...this.defaultOptions, ...options }
+    let opts = {...this.defaultOptions, ...options}
     if (!opts.canvasTagId) {
       throw new Error('canvasTagId should be a string.')
     }
@@ -66,6 +66,51 @@ export class Mark {
     this.canvas.on('mouse:wheel', this.mousewheelEventListener.bind(this))
   }
 
+  /**
+   * 加载给定的标记列表
+   * @method loadGivenMarks
+   * @param {array} marks
+   * @return void
+   * */
+  loadGivenMarks (marks) {
+    if (Array.isArray(marks)) {
+      for (const mark of marks) {
+        if (this.isLegalRect(mark)) {
+          this.canvas.add(new fabric.Rect({
+            left: mark.x,
+            top: mark.y,
+            width: mark.width,
+            height: mark.height,
+            scaleX: 1,
+            scaleY: 1,
+            stroke: '#ff425f',
+            strokeWidth: 3,
+            fill: 'transparent',
+            selectable: false,
+            // opacity: 0.5,
+            hasRotatingPoint: false,
+            hasControls: false,
+            isRect: true
+          }))
+          this.updateContainer(mark)
+        } else {
+          console.error(`rect's properties ('x', 'y', 'width', 'height') should be a number.`)
+        }
+      }
+    } else {
+      throw new Error('param marks should be a array.')
+    }
+  }
+
+  isLegalRect (rect) {
+    const properties = ['x', 'y', 'width', 'height']
+    for (const p of properties) {
+      if (typeof rect[p] === 'number') continue
+      else return false
+    }
+    return true
+  }
+
   mousedownEventListener (options) {
     if (this.image) {
       let mc = this.getMouseCoordinate(options)
@@ -87,7 +132,7 @@ export class Mark {
             hasRotatingPoint: false,
             hasControls: false
           })
-          this.currentDrawing.startPointCoordinate = { vptX: mc.vptX, vptY: mc.vptY }
+          this.currentDrawing.startPointCoordinate = {vptX: mc.vptX, vptY: mc.vptY}
           this.canvas.add(this.currentDrawing)
         } else if (!this.cursorState.rect) {
           // this.mouseCoordinate.startPoint = mc // 初始点坐标
@@ -122,7 +167,7 @@ export class Mark {
         if (top + height > this.imageHeight) {
           height = this.imageHeight - top
         }
-        this.currentDrawing.set({ left, top, width, height })
+        this.currentDrawing.set({left, top, width, height})
         this.canvas.renderAll() // FIXME: need optimize
       } else if (!this.cursorState.rect && this.mouseCoordinate.lastPoint) {
         this.move(mc, this.mouseCoordinate.lastPoint)
@@ -253,7 +298,7 @@ export class Mark {
    * @param {object} state 状态信息
    * */
   setState (state) {
-    this.state = { ...this.state, ...state }
+    this.state = {...this.state, ...state}
   }
 
   move (currentPoint, lastPoint) {
@@ -286,27 +331,32 @@ export class Mark {
     let vptX = (zoomX - x) / sc
     let vptY = (zoomY - y) / sc
 
-    return { zoomX: zoomX, zoomY: zoomY, vptX: vptX, vptY: vptY }
+    return {zoomX: zoomX, zoomY: zoomY, vptX: vptX, vptY: vptY}
   }
 
-  updateContainer (fabricObject) {
+  updateContainer (obj) {
     if (this.results.length >= this.options.maxResultsLength) {
       this.results.shift(0, 1)
       this.canvas.remove(this.canvas.item(1))
     }
-    this.results.push({
-      x: fabricObject.get('left'),
-      y: fabricObject.get('top'),
-      width: fabricObject.get('width'),
-      height: fabricObject.get('height')
-    })
+    if (obj.get) { // is fabricObject
+      this.results.push({
+        x: obj.get('left'),
+        y: obj.get('top'),
+        width: obj.get('width'),
+        height: obj.get('height')
+      })
+    } else { // is Plain Ordinary Js Object
+      this.results.push(obj)
+    }
+
   }
 
   clearRect () {
     const length = this.canvas.size()
     for (let i = 0; i < length; i++) {
       const item = this.canvas.item(i)
-      if (item.startPointCoordinate) {
+      if (item.startPointCoordinate || item.isRect) {
         this.canvas.remove(item)
       }
     }

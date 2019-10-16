@@ -29,6 +29,7 @@
   var mark = new GraphMark.Mark({canvasTagId: 'c', maxResultsLength: 1});
   var imgElement = document.getElementById(imageId);
   mark.init(imgElement);
+  mark.loadGivenMarks([{x: 100, y: 150, width: 100, height: 150}])
 
   function newImgInit () {
     imageId = imageId === 'image1' ? 'image2' : 'image1';
